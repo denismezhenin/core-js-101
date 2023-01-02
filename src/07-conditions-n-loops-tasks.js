@@ -133,8 +133,14 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  if ((rect1.top + rect1.height) < rect2.top) {
+    return false;
+  }
+  if ((rect1.left + rect1.width) < rect2.left) {
+    return false;
+  }
+  return true;
 }
 
 
@@ -294,8 +300,22 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const stringCCN = ccn.toString();
+  let sum = 0;
+  let isEven = false;
+
+  for (let i = stringCCN.length - 1; i >= 0; i -= 1) {
+    let value = Number(stringCCN[i]);
+    if (isEven) {
+      value *= 2;
+      if ((value) > 9) value -= 9;
+    }
+    sum += value;
+    isEven = !isEven;
+  }
+  const result = sum % 10 === 0;
+  return result;
 }
 
 /**
@@ -312,8 +332,13 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  const array = Array.from(num.toString());
+  const sum = array.reduce((acc, el) => acc + Number(el), 0);
+  if (sum.toString().length === 1) return sum;
+  const sum2 = sum.toString();
+  const result = Number(sum2[0]) + Number(sum2[1]);
+  return result;
 }
 
 
@@ -338,8 +363,24 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const brackets = {
+    ')': '(',
+    ']': '[',
+    '}': '{',
+    '>': '<',
+  };
+
+  const stack = [];
+  for (let i = 0; i < str.length; i += 1) {
+    if ([')', ']', '}', '>'].indexOf(str[i]) > -1) {
+      if (brackets[str[i]] !== stack.pop()) return false;
+    } else {
+      stack.push(str[i]);
+    }
+  }
+  const result = stack.length === 0;
+  return result;
 }
 
 
@@ -363,8 +404,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -380,8 +421,23 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  let temp;
+  for (let i = 0; i < pathes[0].length; i += 1) {
+    temp = (pathes[0]).slice(0, i);
+    for (let j = 1; j < pathes.length; j += 1) {
+      if (temp !== pathes[j].slice(0, i) && temp[i - 1] === '/') {
+        if (temp.length === 1) return '';
+        const temp2 = temp.slice(0, i - 1);
+        return temp2.slice(0, (temp2.lastIndexOf('/') + 1));
+      }
+      if (temp !== pathes[j].slice(0, i)) {
+        if (temp.length === 1) return '';
+        return temp.slice(0, (temp.lastIndexOf('/') + 1));
+      }
+    }
+  }
+  return temp;
 }
 
 
